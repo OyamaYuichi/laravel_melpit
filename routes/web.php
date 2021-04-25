@@ -19,6 +19,13 @@ Route::get('/', function () {
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::prefix('mypage')
+    ->namespace('MyPage')
+    ->middleware('auth')
+    ->group(function () {
+        Route::get('edit-profile', 'ProfileController@showProfileEditForm')->name('mypage.edit-profile');
+    });
+
 Auth::routes();
 
 
