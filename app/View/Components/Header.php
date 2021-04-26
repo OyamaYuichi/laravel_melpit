@@ -3,6 +3,7 @@
 namespace App\View\Components;
 
 use Illuminate\View\Component;
+use App\Models\PrimaryCategory;
 use Illuminate\Support\Facades\Auth;
 
 class Header extends Component
@@ -26,7 +27,17 @@ class Header extends Component
     {
         $user = Auth::user();
 
+        $categories = PrimaryCategory::query()
+            ->with([
+                'secondaryCategories' => function ($query) {
+                    $query->orderBy('sort_no');
+                }
+            ])
+            ->orderBy('sort_no')
+            ->get();
+
         return view('components.header')
-            ->with('user', $user);
+            ->with('user', $user)
+            ->with('categories', $categories);
     }
 }
