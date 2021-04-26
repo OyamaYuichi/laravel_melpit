@@ -48,8 +48,13 @@ class SellController extends Controller
         $item->state                 = Item::STATE_SELLING;
         $item->save();
 
-        return redirect()->back()
-            ->with('status', '商品を出品しました。');
+        $items = Item::orderByRaw( "FIELD(state, '" . Item::STATE_SELLING . "', '" . Item::STATE_BOUGHT . "')" )
+            ->orderBy('id', 'DESC')
+            ->paginate(12);
+
+        return view('items.items')
+            ->with('status', '商品を出品しました。')
+            ->with('items', $items);
     }
 
     /**
